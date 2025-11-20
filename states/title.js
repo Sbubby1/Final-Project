@@ -1,3 +1,4 @@
+
 import { Toolbox } from "../toolbox.js";
 
 export class Title {
@@ -7,25 +8,22 @@ export class Title {
     changeToGame = false;
     toolbox = new Toolbox();
 
-    startButtonX = 300;
-    startButtonY = 200;
-    startButtonW = 100;
-    startButtonH = 50;
+ 
 
     constructor(canvas, pencil) {
         this.canvas = canvas;
         this.pencil = pencil;
 
-        //bind the function; this becomes something different in the callback
-        //"onKeyPressed", otherwise.
+        // bind handlers so 'this' is correct in callbacks
         this.onKeyPressed = this.onKeyPressed.bind(this);
         this.onClicked = this.onClicked.bind(this);
 
-        document.addEventListener("keypress", this.onKeyPressed )
-        document.addEventListener("click", this.onClicked)
+        // use keydown and add listeners (no trailing commas)
+        document.addEventListener("keydown", this.onKeyPressed);
+        this.canvas.addEventListener("click", this.onClicked);
     }
 
-    onKeyPressed() {
+    onKeyPressed(event) {
         this.changeToGame = true;
     }
     
@@ -38,22 +36,31 @@ export class Title {
         this.changeToGame = isHitButton;
     }
 
+    // Call destroy() when leaving the title state to remove listeners
+    destroy() {
+        document.removeEventListener("keydown", this.onKeyPressed);
+       
+    }
+
     update() {
-        this.pencil.fillStyle = "gray";
-        this.pencil.font = "20px Georgia";
-        this.pencil.fillText("Title", 10, 50);
+        
+        this.pencil.fillStyle = "blue";
+        this.pencil.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.pencil.fillStyle = "pink";
-        this.pencil.fillRect(
-            this.startButtonX, this.startButtonY,
-            this.startButtonW, this.startButtonH
-        );
+        
+        this.pencil.fillStyle = "darkgrey";
+        this.pencil.font = "50px Orbitron, sans-serif";
+        this.pencil.fillText("Robo Battle", 175, 300);
+        
 
+         this.pencil.fillStyle = "darkgrey";
+        this.pencil.font = "25px Orbitron, sans-serif";
+        this.pencil.fillText("Press any button to start", 170, 400);
+
+        
         if(this.changeToGame) {
-            this.changeToGame = false; //consume it; so we reset the title screen for next time.
+            this.changeToGame = false; // consume it
             return "game";
         }
     }
-
-
 }

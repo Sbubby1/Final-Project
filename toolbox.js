@@ -11,7 +11,17 @@ export class Toolbox {
     getRandomItem(array) {
         let randomIndex = this.getRandomIndex(array);
         return array[randomIndex];
+
     }
+
+    isWithinRect(x, y, rectX, rectY, rectW, rectH) {
+    return (
+        x >= rectX &&
+        x <= rectX + rectW &&
+        y >= rectY &&
+        y <= rectY + rectH
+    );
+}
 
     shuffleArray(array) {
         let shuffled = [];
